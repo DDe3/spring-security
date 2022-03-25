@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -35,7 +36,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		try {
 			user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
 			return this.authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(user.getUser(), user.getPassword(), new ArrayList<>()));
+					.authenticate(new UsernamePasswordAuthenticationToken(user.getNombre(), user.getPassword(), new ArrayList<>()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,9 +49,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		Usuario user = (Usuario) authResult.getPrincipal();
+		User user = (User) authResult.getPrincipal();
 		String token = Jwts.builder().setIssuedAt(new Date()).setIssuer("http://localhost:8081")
-				.setSubject(user.getUser())
+				.setSubject(user.getUsername())
 				.setExpiration(new Date(System.currentTimeMillis()+100000L))
 				.signWith(SignatureAlgorithm.HS512, "55as4daw4de8faefaw8d4asd4asdeadsasfaee11")
 				.compact();
