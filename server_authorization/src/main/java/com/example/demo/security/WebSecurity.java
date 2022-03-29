@@ -33,18 +33,18 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	}
 	
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-//		httpSecurity.cors().configurationSource(request -> {
-//			var cors = new CorsConfiguration();
-//			cors.setAllowedOrigins(List.of("*"));
-//			cors.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
-//			cors.setAllowedHeaders(List.of("*"));
-//			return cors;
-//		});
+		httpSecurity.cors().configurationSource(request -> {
+			var cors = new CorsConfiguration();
+			cors.setAllowedOrigins(List.of("*"));
+			cors.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+			cors.setAllowedHeaders(List.of("*"));
+			return cors;
+		});
 		
 		
 		httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and().cors().and().csrf().disable()
-		.authorizeRequests().antMatchers(HttpMethod.POST, "/api/obtenerToken").permitAll()
+		.authorizeRequests().antMatchers(HttpMethod.POST, "/api/obtenerToken", "/register").permitAll()
 		.anyRequest().authenticated().and().addFilter(new JWTAuthenticationFilter(authenticationManager()));
 		
 	}
