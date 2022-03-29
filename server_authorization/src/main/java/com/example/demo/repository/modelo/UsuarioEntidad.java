@@ -23,6 +23,7 @@ public class UsuarioEntidad {
 	private String password;
 	
 	
+	
 	public Integer getId() {
 		return id;
 	}
